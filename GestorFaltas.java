@@ -10,10 +10,11 @@ import java.util.Scanner;
  *
  */
 public class GestorFaltas {
-     
-
+    Estudiante [] estudiantes;
+    private int total;
     public GestorFaltas(int n) {
-         
+        estudiantes = new Estudiante[n];
+        this.total = total;
     }
 
     /**
@@ -21,7 +22,7 @@ public class GestorFaltas {
      * false en otro caso
      */
     public boolean cursoCompleto() {
-        return false;
+        return total == estudiantes.length;
     }
 
     /**
@@ -37,10 +38,26 @@ public class GestorFaltas {
      *    
      */
     public void addEstudiante(Estudiante nuevo) {
-        
-
+        int z = 0;
+        for(int i = 1; i <= total; i++){
+            if(nuevo.getApellidos() == estudiantes[i].getApellidos()){
+                z++;
+            }
+        }
+        if(buscarEstudiante(nuevo.getApellidos()) == -1|| z == 1){
+            System.out.println("No se puede");
+        } 
+        else{
+            int i = total - 1;
+            while (i >= 0 && nuevo.getApellidos().compareTo(estudiantes[i].getApellidos()) < 0) {
+                estudiantes[i + 1] = estudiantes[i];
+                i-- ;
+            }
+            estudiantes[i + 1] = nuevo; 
+            total ++; 
+          
+        }
     }
-
 
     /**
      * buscar un estudiante por sus apellidos
@@ -51,8 +68,24 @@ public class GestorFaltas {
      *  
      */
     public int buscarEstudiante(String apellidos) {
-         
-        return 0;
+        int izquierda = 0;
+        int derecha = estudiantes.length - 1;
+        while (izquierda <= derecha) {
+            int mitad = (izquierda + derecha) / 2;
+
+            if (apellidos.compareTo(estudiantes[mitad].getApellidos()) == 0) {
+                return mitad;
+            }
+            else if (apellidos.compareTo(estudiantes[mitad].getApellidos()) < 0) {
+                derecha = mitad - 1;
+            }
+            else {
+                izquierda = mitad + 1;
+
+            }
+        }
+
+        return -1;
     }
 
     /**
@@ -61,7 +94,7 @@ public class GestorFaltas {
      *  
      */
     public String toString() {
-        
+
         return null;
 
     }
@@ -75,8 +108,11 @@ public class GestorFaltas {
      *  justificar también)
      */
     public void justificarFaltas(String apellidos, int faltas) {
-         
-
+        Estudiante e = estudiantes[buscarEstudiante(apellidos)];
+        int FalN = e.getFaltasNoJustificadas();
+        int Fal = e.getFaltasJustificadas();
+        e.setFaltasNoJustificadas(0);
+        e.setFaltasJustificadas(FalN + Fal);
     }
 
     /**
@@ -85,8 +121,22 @@ public class GestorFaltas {
      * Método de selección directa
      */
     public void ordenar() {
-        
-
+        for (int i = 0; i < estudiantes.length - 1; i++) {
+            int posmin = i;
+            for (int j = i + 1; j < estudiantes.length; j++) {
+                if (estudiantes[j].getFaltasNoJustificadas() < estudiantes[posmin].getFaltasNoJustificadas()) {
+                    posmin = j;
+                }
+                else if(estudiantes[j].getFaltasNoJustificadas() == estudiantes[posmin].getFaltasNoJustificadas()){
+                    if(estudiantes[j].getFaltasNoJustificadas() < estudiantes[posmin].getFaltasNoJustificadas()){
+                        posmin = j;
+                    }
+                }
+            }
+            Estudiante aux = estudiantes[posmin];
+            estudiantes[posmin] = estudiantes[i];
+            estudiantes[i] = aux;
+        }
     }
 
     /**
@@ -94,8 +144,15 @@ public class GestorFaltas {
      * aquellos estudiantes con 30 o más faltas injustificadas
      */
     public void anularMatricula() {
-         
-
+        for (int i = 0; i < estudiantes.length - 1; i++) {
+            if(estudiantes[i].getFaltasNoJustificadas() >= 30){
+                int j = 0;
+                while(j < estudiantes.length - 2){
+                    estudiantes[j] = estudiantes[j + 1];
+                    j++;
+                }
+            }
+        }
     }
 
     /**

@@ -1,6 +1,6 @@
 /**
  * Un objeto de esta clase guarda la información de un estudiante
- *
+ * 
  */
 public class Estudiante {
     private final static String SEPARADOR = ",";
@@ -17,10 +17,15 @@ public class Estudiante {
      *  
      */
     public Estudiante(String lineaDatos) {
-         
-
+        String[] tokens = lineaDatos.split(SEPARADOR);
+        nombre = tokens[0];
+        apellidos = tokens[1];
+        faltasNoJustificadas = Integer.parseInt(tokens[2].trim());
+        faltasJustificadas = Integer.parseInt(tokens[3].trim());
+        
+        
     }
-
+    
 
     /**
      * accesor para el nombre completo
